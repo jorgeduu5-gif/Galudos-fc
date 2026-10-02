@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galudos FC - EA FC 26 Pro Clubs</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-main: #0B0E14;
+            --bg-card: #151A23;
+            --bg-card-hover: #1C2330;
+            --primary: #00FF87;
+            --secondary: #60EFFF;
+            --accent: #FF0055;
+            --gold: #FFD700;
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            --border: rgba(255, 255, 255, 0.08);
+            --glow: rgba(0, 255, 135, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* NAVBAR */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 8%;
+            background: rgba(11, 14, 20, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .logo-shield {
+            width: 42px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            clip-path: polygon(50% 0%, 100% 20%, 100% 80%, 50% 100%, 0% 80%, 0% 20%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: 900;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px var(--glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+            text-shadow: 0 0 8px var(--glow);
+        }
+
+        .btn-admin {
+            background: linear-gradient(135deg, var(--primary), #00cc6a);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-admin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px var(--glow);
+        }
+
+        .btn-logout {
+            background: var(--accent);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            position: relative;
+            padding: 4rem 8% 2rem 8%;
+            background: radial-gradient(circle at 50% 20%, rgba(0, 255, 135, 0.08) 0%, rgba(11, 14, 20, 1) 70%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .badge-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(0, 255, 135, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .club-stats-grid {
+            display: flex;
+            gap: 1.5rem;
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .stat-val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* SECTION COMMONS */
+        section {
+            padding: 3.5rem 8%;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* ÁREA DO DONO / PRESIDENTE */
+        .owner-card {
+            background: linear-gradient(135deg, #151a23, #1e2634);
+            border: 1px solid rgba(0, 255, 135, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            flex-wrap: wrap;
+        }
+
+        .owner-avatar-container {
+            position: relative;
+        }
+
+        .owner-avatar {
+            width: 140px;
+            height: 140px;
+            background: #252e3e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--primary);
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 20px var(--glow);
+            overflow: hidden;
+        }
+
+        .owner-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .owner-badge {
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: #000;
+            font-weight: 900;
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .owner-details {
+            flex: 1;
+        }
+
+        .owner-name {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .owner-role {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .owner-quote {
+            color: var(--text-muted);
+            font-style: italic;
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1.2rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* MVP SECTION */
+        .mvp-banner {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(21, 26, 35, 0.95));
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.2);
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .mvp-badge {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: var(--gold);
+            color: #000;
+            font-weight: 900;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .mvp-info {
+            max-width: 500px;
+        }
+
+        .mvp-title {
+            color: var(--gold);
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .mvp-player-name {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 0.2rem;
+        }
+
+        .mvp-stats-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.2rem;
+        }
+
+        .mvp-stat-box {
+            background: rgba(0,0,0,0.4);
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,215,0,0.3);
+            text-align: center;
+        }
+
+        .mvp-stat-number {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--gold);
+        }
+
+        .mvp-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* TROPHY ROOM */
+        .trophy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .trophy-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .trophy-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .trophy-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: none;
+            gap: 5px;
+        }
+
+        body.admin-logged-in .trophy-actions {
+            display: flex;
+        }
+
+        .trophy-icon {
+            font-size: 3.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px rgba(255,215,0,0.4));
+        }
+
+        .trophy-title {
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .trophy-count {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--gold);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        /* SQUAD / FUT CARDS */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+            box-shadow: 0 0 12px var(--glow);
+        }
+
+        .squad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .fut-card {
+            background: linear-gradient(145deg, #1e2634, #121720);
+            border-radius: 16px;
+            padding: 1.2rem;
+            border: 1px solid var(--border);
+            position: relative;
+            transition: 0.3s transform, 0.3s box-shadow;
+            cursor: pointer;
+        }
+
+        .fut-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px var(--glow);
+            border-color: var(--primary);
+        }
+
+        .card-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: none;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        body.admin-logged-in .card-actions {
+            display: flex;
+        }
+
+        .btn-card-edit {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: var(--text-main);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-card-edit:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-rating {
+            font-size: 2rem;
+            font-weight: 900;
+            line-height: 1;
+            color: var(--primary);
+        }
+
+        .card-pos {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--secondary);
+            text-transform: uppercase;
+        }
+
+        .card-avatar {
+            width: 75px;
+            height: 75px;
+            background: #252e3e;
+            border-radius: 50%;
+            margin: 0 auto 0.8rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-muted);
+            border: 2px solid var(--border);
+            overflow: hidden;
+        }
+
+        .card-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-name {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 0.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-gt {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .card-stats-quick {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            margin-bottom: 0.8rem;
+            border: 1px solid var(--border);
+        }
+
+        .card-stats-quick-item {
+            text-align: center;
+        }
+
+        .card-stats-quick-item .val {
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .card-stats-quick-item .lbl {
+            color: var(--text-muted);
+            font-size: 0.65rem;
+        }
+
+        .card-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+
+        .card-stat-val {
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .card-stat-lbl {
+            color: var(--text-muted);
+            font-size: 0.65rem;
+        }
+
+        /* PERFORMANCE CHARTS */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 550px;
+            padding: 2rem;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            background: #0b0e14;
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary);
+            color: #000;
+            font-weight: 800;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: 0.3s;
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 0 15px var(--glow);
+        }
+
+        .admin-edit-btn {
+            display: none;
+            padding: 8px 16px;
+            background: var(--primary);
+            color: #000;
+            font-weight: 800;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        body.admin-logged-in .admin-edit-btn {
+            display: inline-block;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #06080C;
+            padding: 2rem 8%;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo">
+            <div class="logo-shield">G</div>
+            <span>GALUDOS FC</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home" class="active">Início</a></li>
+            <li><a href="#dono">Diretoria</a></li>
+            <li><a href="#mvp">MVP</a></li>
+            <li><a href="#trofeus">Troféus</a></li>
+            <li><a href="#elenco">Elenco</a></li>
+            <li><a href="#desempenho">Desempenho</a></li>
+            <li>
+                <button class="btn-admin" id="btnAdmin" onclick="handleAdminClick()"><i class="fas fa-lock"></i> Área do Dono</button>
+                <button class="btn-logout" id="btnLogout" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="badge-tag"><i class="fas fa-gamepad"></i> EA Sports FC 26 Pro Clubs</div>
+            <h1 class="hero-title">Rumo ao Topo da <span>Divisão 1</span></h1>
+            <p class="hero-desc">
+                Portal oficial do Galudos FC. Gestão do elenco, histórico de conquistas, estatísticas atualizadas e gráficos de desempenho.
+            </p>
+            <div class="club-stats-grid">
+                <div class="stat-item">
+                    <div class="stat-val" id="statMatches">142</div>
+                    <div class="stat-lbl">Jogos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-val" id="statWins">98</div>
+                    <div class="stat-lbl">Vitórias</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-val" id="statDraws">28</div>
+                    <div class="stat-lbl">Empates</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-val" id="statLosses">16</div>
+                    <div class="stat-lbl">Derrotas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-val" id="statGoalsFor">320</div>
+                    <div class="stat-lbl">Gols Pró</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-val" id="statGoalsAgainst">110</div>
+                    <div class="stat-lbl">Gols Sofridos</div>
+                </div>
+            </div>
+            <div style="margin-top: 1rem;">
+                <button class="admin-edit-btn" onclick="openClubStatsModal()"><i class="fas fa-edit"></i> Editar Estatísticas do Clube</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ESPAÇO DO DONO / PRESIDENTE -->
+    <section id="dono">
+        <div class="section-header">
+            <h2 class="section-title">Diretoria do Clube</h2>
+            <button class="admin-edit-btn" id="btnEditOwner" onclick="openOwnerModal()"><i class="fas fa-pen"></i> Editar Diretoria</button>
+        </div>
+        <div class="owner-card">
+            <div class="owner-avatar-container">
+                <div class="owner-avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="owner-badge">Presidente</div>
+            </div>
+            <div class="owner-details">
+                <div class="owner-name" id="ownerDisplayTitle">
+                    Capitão & Dono 
+                    <i class="fas fa-check-circle" style="color:var(--primary); font-size: 1.2rem;"></i>
+                </div>
+                <div class="owner-role">Fundador & Comandante Geral</div>
+                <div class="owner-quote" id="ownerDisplayQuote">
+                    "O Galudos FC não é apenas um time de Pro Clubs, é uma família dentro dos gramados virtuais. Nosso foco é o futebol coletivo, respeito entre os jogadores e busca constante por troféus no EA FC 26."
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DESTAQUE MVP DA SEMANA -->
+    <section id="mvp">
+        <div class="section-header">
+            <h2 class="section-title">MVP da Semana</h2>
+            <button class="admin-edit-btn" onclick="openMvpModal()"><i class="fas fa-crown"></i> Alterar MVP</button>
+        </div>
+        <div class="mvp-banner">
+            <div class="mvp-badge"><i class="fas fa-crown"></i> Destaque</div>
+            <div class="mvp-info">
+                <div class="mvp-title">Jogador da Semana</div>
+                <div class="mvp-player-name" id="mvpName">Galudo_Striker</div>
+                <p style="color: var(--text-muted); font-size: 0.95rem;" id="mvpDesc">Dominou os gramados virtuais nesta semana com atuações decisivas na Divisão 1 e na Copa dos Campeões.</p>
+                <div class="mvp-stats-row">
+                    <div class="mvp-stat-box">
+                        <div class="mvp-stat-number" id="mvpGoals">12</div>
+                        <div class="mvp-stat-label">Gols</div>
+                    </div>
+                    <div class="mvp-stat-box">
+                        <div class="mvp-stat-number" id="mvpAssists">5</div>
+                        <div class="mvp-stat-label">Assistências</div>
+                    </div>
+                    <div class="mvp-stat-box">
+                        <div class="mvp-stat-number" id="mvpRating">9.4</div>
+                        <div class="mvp-stat-label">Nota Média</div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <i class="fas fa-award" style="font-size: 10rem; color: rgba(255, 215, 0, 0.2);"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- SALA DE TROFÉUS -->
+    <section id="trofeus">
+        <div class="section-header">
+            <h2 class="section-title">Sala de Troféus</h2>
+            <button class="admin-edit-btn" onclick="openTrophyModalForAdd()"><i class="fas fa-plus-circle"></i> Adicionar Troféu</button>
+        </div>
+        <div class="trophy-grid" id="trophyGrid">
+            <!-- Troféus gerados via JS -->
+        </div>
+    </section>
+
+    <!-- ELENCO / SQUAD -->
+    <section id="elenco">
+        <div class="section-header">
+            <h2 class="section-title">Gestão do Elenco</h2>
+            <button class="admin-edit-btn" onclick="openPlayerModal()"><i class="fas fa-user-plus"></i> Add Jogador</button>
+        </div>
+        
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterSquad('all')">Todos</button>
+            <button class="filter-btn" onclick="filterSquad('ATA')">Ataque</button>
+            <button class="filter-btn" onclick="filterSquad('MEI')">Meio-Campo</button>
+            <button class="filter-btn" onclick="filterSquad('DEF')">Defesa</button>
+            <button class="filter-btn" onclick="filterSquad('GOL')">Goleiro</button>
+        </div>
+
+        <div class="squad-grid" id="squadGrid">
+            <!-- Cards gerados via JS -->
+        </div>
+    </section>
+
+    <!-- GRÁFICOS DE DESEMPENHO -->
+    <section id="desempenho">
+        <h2 class="section-title">Gráficos de Desempenho</h2>
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3 style="margin-bottom:1rem; font-size:1.1rem; color:var(--text-muted);">Aproveitamento Geral</h3>
+                <canvas id="chartAproveitamento"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3 style="margin-bottom:1rem; font-size:1.1rem; color:var(--text-muted);">Ataque vs Defesa (Gols)</h3>
+                <canvas id="chartGols"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL: LOGIN DO DONO / CAPITÃO -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeLoginModal()">&times;</button>
+            <h2 style="margin-bottom: 0.5rem;"><i class="fas fa-lock" style="color:var(--primary);"></i> Área Restrita do Dono</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;">Digite a senha de administrador para liberar a edição do site.</p>
+            <form onsubmit="submitAdminLogin(event)">
+                <div class="form-group">
+                    <label>Senha de Acesso</label>
+                    <input type="password" id="adminPasswordInput" class="form-control" placeholder="Digite a senha..." required>
+                </div>
+                <p id="loginErrorMsg" style="color:var(--accent); font-size:0.8rem; display:none; margin-bottom:1rem;">Senha incorreta! Tente novamente.</p>
+                <button type="submit" class="btn-submit">Entrar no Painel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: EDITAR ESTATÍSTICAS DO CLUBE -->
+    <div class="modal-overlay" id="clubStatsModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeClubStatsModal()">&times;</button>
+            <h2 style="margin-bottom: 1.5rem;">Estatísticas do Clube</h2>
+            <form onsubmit="saveClubStats(event)">
+                <div class="form-row-3">
+                    <div class="form-group"><label>Vitórias</label><input type="number" id="inputWins" class="form-control" required></div>
+                    <div class="form-group"><label>Empates</label><input type="number" id="inputDraws" class="form-control" required></div>
+                    <div class="form-group"><label>Derrotas</label><input type="number" id="inputLosses" class="form-control" required></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Gols Pró (Marcados)</label><input type="number" id="inputGoalsFor" class="form-control" required></div>
+                    <div class="form-group"><label>Gols Sofridos</label><input type="number" id="inputGoalsAgainst" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Atualizar Estatísticas</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT PLAYER -->
+    <div class="modal-overlay" id="playerModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closePlayerModal()">&times;</button>
+            <h2 style="margin-bottom: 1.5rem;" id="modalPlayerTitle">Cadastrar Jogador</h2>
+            <form id="playerForm" onsubmit="savePlayer(event)">
+                <input type="hidden" id="playerId">
+                <div class="form-group">
+                    <label>Nome do Jogador</label>
+                    <input type="text" id="pName" class="form-control" required placeholder="Ex: Galudo_Striker">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Gamertag / ID</label>
+                        <input type="text" id="pGt" class="form-control" required placeholder="Ex: PSN: Galudo">
+                    </div>
+                    <div class="form-group">
+                        <label>Posição</label>
+                        <select id="pPos" class="form-control">
+                            <option value="ATA">ATA</option>
+                            <option value="MEI">MEI</option>
+                            <option value="DEF">DEF</option>
+                            <option value="GOL">GOL</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Overall (Rating)</label>
+                        <input type="number" id="pRating" class="form-control" value="85" max="99" min="50">
+                    </div>
+                    <div class="form-group">
+                        <label>URL da Foto (Opcional)</label>
+                        <input type="url" id="pPhoto" class="form-control" placeholder="https://exemplo.com/foto.jpg">
+                    </div>
+                </div>
+
+                <h4 style="margin: 1rem 0 0.5rem 0; color:var(--primary); font-size:0.9rem;">Estatísticas na Temporada</h4>
+                <div class="form-row-3">
+                    <div class="form-group"><label>Jogos</label><input type="number" id="pMatches" class="form-control" value="0"></div>
+                    <div class="form-group"><label>Gols</label><input type="number" id="pGoals" class="form-control" value="0"></div>
+                    <div class="form-group"><label>Assistências</label><input type="number" id="pAssists" class="form-control" value="0"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Nota Média</label><input type="number" step="0.1" id="pAvgRating" class="form-control" value="7.0"></div>
+                    <div class="form-group"><label>Melhor em Campo (MOTM)</label><input type="number" id="pMotm" class="form-control" value="0"></div>
+                </div>
+
+                <h4 style="margin: 1rem 0 0.5rem 0; color:var(--secondary); font-size:0.9rem;">Atributos do Card (FUT)</h4>
+                <div class="form-row-3">
+                    <div class="form-group"><label>Ritmo (PAC)</label><input type="number" id="pPac" class="form-control" value="80"></div>
+                    <div class="form-group"><label>Chute (SHO)</label><input type="number" id="pSho" class="form-control" value="80"></div>
+                    <div class="form-group"><label>Passe (PAS)</label><input type="number" id="pPas" class="form-control" value="80"></div>
+                </div>
+                <div class="form-row-3">
+                    <div class="form-group"><label>Drible (DRI)</label><input type="number" id="pDri" class="form-control" value="80"></div>
+                    <div class="form-group"><label>Defesa (DEF)</label><input type="number" id="pDef" class="form-control" value="80"></div>
+                    <div class="form-group"><label>Físico (PHY)</label><input type="number" id="pPhy" class="form-control" value="80"></div>
+                </div>
+                <button type="submit" class="btn-submit">Salvar Jogador</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: VER PERFIL DO JOGADOR -->
+    <div class="modal-overlay" id="playerProfileModal">
+        <div class="modal-card" style="text-align: center;">
+            <button class="modal-close" onclick="closePlayerProfileModal()">&times;</button>
+            <div id="playerProfileContent"></div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT TROFÉU -->
+    <div class="modal-overlay" id="trophyEditModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeTrophyEditModal()">&times;</button>
+            <h2 style="margin-bottom: 1.5rem;" id="trophyEditTitle">Gerenciar Troféu</h2>
+            <form onsubmit="saveTrophy(event)">
+                <input type="hidden" id="trophyId">
+                <div class="form-group">
+                    <label>Nome do Torneio</label>
+                    <input type="text" id="tTitle" class="form-control" required placeholder="Ex: Liga Divisão 1">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Subtítulo / Categoria</label>
+                        <input type="text" id="tSub" class="form-control" required placeholder="Ex: 3x Campeão Invicto">
+                    </div>
+                    <div class="form-group">
+                        <label>Ícone (FontAwesome)</label>
+                        <select id="tIcon" class="form-control">
+                            <option value="fa-trophy">Troféu (fa-trophy)</option>
+                            <option value="fa-crown">Coroa (fa-crown)</option>
+                            <option value="fa-shield-alt">Escudo (fa-shield-alt)</option>
+                            <option value="fa-award">Medalha (fa-award)</option>
+                            <option value="fa-star">Estrela (fa-star)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Descrição das Conquistas</label>
+                    <textarea id="tDesc" class="form-control" rows="3" required placeholder="Detalhes dos títulos conquistados..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Salvar Troféu</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: EDITAR ESPAÇO DO DONO -->
+    <div class="modal-overlay" id="ownerModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeOwnerModal()">&times;</button>
+            <h2 style="margin-bottom: 1.5rem;">Editar Diretoria do Time</h2>
+            <form onsubmit="saveOwnerInfo(event)">
+                <div class="form-group">
+                    <label>Título / Nome do Dono</label>
+                    <input type="text" id="inputOwnerTitle" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Mensagem / Visão do Time</label>
+                    <textarea id="inputOwnerQuote" class="form-control" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Alterar Senha do Painel (Opcional)</label>
+                    <input type="text" id="inputNewPass" class="form-control" placeholder="Deixe em branco para manter a atual">
+                </div>
+                <button type="submit" class="btn-submit">Atualizar Diretoria</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: EDITAR MVP -->
+    <div class="modal-overlay" id="mvpModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeMvpModal()">&times;</button>
+            <h2 style="margin-bottom: 1.5rem;">Definir MVP da Semana</h2>
+            <form onsubmit="saveMvp(event)">
+                <div class="form-group">
+                    <label>Selecione um Jogador do Elenco</label>
+                    <select id="mvpSelectPlayer" class="form-control" onchange="autoFillMvpData()">
+                        <!-- Preenchido via JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Descrição do Destaque</label>
+                    <textarea id="inputMvpDesc" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-row-3">
+                    <div class="form-group"><label>Gols na Semana</label><input type="number" id="inputMvpGoals" class="form-control" required></div>
+                    <div class="form-group"><label>Assistências</label><input type="number" id="inputMvpAssists" class="form-control" required></div>
+                    <div class="form-group"><label>Nota Média</label><input type="number" step="0.1" id="inputMvpRating" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn-submit">Atualizar MVP</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: DETALHES DO TROFÉU -->
+    <div class="modal-overlay" id="trophyModal">
+        <div class="modal-card" style="text-align: center;">
+            <button class="modal-close" onclick="closeTrophyModal()">&times;</button>
+            <i class="fas fa-trophy" id="trophyModalIcon" style="font-size: 4rem; color: var(--gold); margin-bottom: 1rem;"></i>
+            <h2 id="trophyModalName" style="margin-bottom: 0.5rem;">Título</h2>
+            <p id="trophyModalSub" style="color: var(--gold); font-weight: 700; margin-bottom: 1rem;">Subtítulo</p>
+            <p id="trophyModalDesc" style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5;"></p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Galudos FC - Todos os direitos reservados. EA Sports FC 26 Pro Clubs Team.</p>
+    </footer>
+
+    <script>
+        // CONFIGURAÇÕES DE SENHA E ADM
+        let adminPassword = localStorage.getItem('galudos_admin_pass') || 'galudos123';
+        let isAdminLoggedIn = false;
+
+        // DADOS DO CLUBE
+        let clubStats = JSON.parse(localStorage.getItem('galudos_club_stats')) || {
+            wins: 98,
+            draws: 28,
+            losses: 16,
+            goalsFor: 320,
+            goalsAgainst: 110
+        };
+
+        // DADOS DA DIRETORIA
+        let ownerInfo = JSON.parse(localStorage.getItem('galudos_owner_info')) || {
+            title: "Capitão & Dono",
+            quote: "O Galudos FC não é apenas um time de Pro Clubs, é uma família dentro dos gramados virtuais. Nosso foco é o futebol coletivo, respeito entre os jogadores e busca constante por troféus no EA FC 26."
+        };
+
+        // DADOS DO MVP
+        let mvpData = JSON.parse(localStorage.getItem('galudos_mvp_data')) || {
+            name: "Galudo_Striker",
+            desc: "Dominou os gramados virtuais nesta semana com atuações decisivas na Divisão 1 e na Copa dos Campeões.",
+            goals: 12,
+            assists: 5,
+            rating: 9.4
+        };
+
+        // DADOS DOS TROFÉUS
+        const defaultTrophies = [
+            { id: 1, title: 'Liga Divisão 1', sub: '3x Campeão Invicto', desc: 'Conquistado na Temporada 2, 4 e 5 do EA FC 26.', icon: 'fa-trophy' },
+            { id: 2, title: 'Copa Continental', sub: '1x Campeão Continental', desc: 'Vitória por 4x1 na final contra o Red Bulls FC.', icon: 'fa-crown' },
+            { id: 3, title: 'Supercopa Pro', sub: '1x Campeão da Supercopa', desc: 'Duelo épico entre Campeão da Liga e da Copa.', icon: 'fa-shield-alt' }
+        ];
+        let trophies = JSON.parse(localStorage.getItem('galudos_trophies')) || defaultTrophies;
+
+        // DADOS DO ELENCO
+        const defaultSquad = [
+            { id: 1, name: "Galudo_Striker", gt: "PSN: Galudo_ST", pos: "ATA", rating: 89, photo: "", matches: 120, goals: 110, assists: 35, avgRating: 8.8, motm: 24, pac: 92, sho: 90, pas: 78, dri: 88, def: 40, phy: 82 },
+            { id: 2, name: "Maestro_10", gt: "Xbox: Maestro10", pos: "MEI", rating: 88, photo: "", matches: 115, goals: 32, assists: 75, avgRating: 8.4, motm: 18, pac: 84, sho: 82, pas: 91, dri: 89, def: 55, phy: 70 },
+            { id: 3, name: "Speedy_7", gt: "PC: Speedy7", pos: "ATA", rating: 87, photo: "", matches: 90, goals: 65, assists: 40, avgRating: 8.1, motm: 12, pac: 95, sho: 83, pas: 80, dri: 87, def: 38, phy: 68 },
+            { id: 4, name: "Paredao_CB", gt: "Xbox: ParedaoCB", pos: "DEF", rating: 88, photo: "", matches: 130, goals: 8, assists: 12, avgRating: 8.2, motm: 15, pac: 80, sho: 45, pas: 70, dri: 68, def: 90, phy: 92 },
+            { id: 5, name: "MaoDePau_GK", gt: "PSN: MaoDePauGK", pos: "GOL", rating: 87, photo: "", matches: 140, goals: 0, assists: 2, avgRating: 8.5, motm: 20, pac: 88, sho: 86, pas: 82, dri: 89, def: 50, phy: 87 }
+        ];
+        let squad = JSON.parse(localStorage.getItem('galudos_squad')) || defaultSquad;
+
+        // CHARTS INSTANCES
+        let chart1, chart2;
+
+        // PERSISTÊNCIA
+        function saveAllToStorage() {
+            localStorage.setItem('galudos_squad', JSON.stringify(squad));
+            localStorage.setItem('galudos_trophies', JSON.stringify(trophies));
+            localStorage.setItem('galudos_club_stats', JSON.stringify(clubStats));
+            localStorage.setItem('galudos_owner_info', JSON.stringify(ownerInfo));
+            localStorage.setItem('galudos_mvp_data', JSON.stringify(mvpData));
+        }
+
+        // SISTEMA DE AUTENTICAÇÃO DO DONO
+        function handleAdminClick() {
+            if (isAdminLoggedIn) {
+                alert('Você já está logado como Dono/Administrador.');
+            } else {
+                openLoginModal();
+            }
+        }
+
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('loginErrorMsg').style.display = 'none';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function submitAdminLogin(e) {
+            e.preventDefault();
+            const enteredPass = document.getElementById('adminPasswordInput').value;
+            if (enteredPass === adminPassword) {
+                isAdminLoggedIn = true;
+                document.body.classList.add('admin-logged-in');
+                document.getElementById('btnAdmin').innerHTML = '<i class="fas fa-unlock"></i> Modo Dono Ativo';
+                document.getElementById('btnLogout').style.display = 'inline-block';
+                closeLoginModal();
+                renderSquad(squad);
+                renderTrophies();
+            } else {
+                document.getElementById('loginErrorMsg').style.display = 'block';
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            document.body.classList.remove('admin-logged-in');
+            document.getElementById('btnAdmin').innerHTML = '<i class="fas fa-lock"></i> Área do Dono';
+            document.getElementById('btnLogout').style.display = 'none';
+            renderSquad(squad);
+            renderTrophies();
+            alert('Você saiu do modo de edição.');
+        }
+
+        // RENDER CLUB STATS
+        function updateClubStatsUI() {
+            const totalMatches = clubStats.wins + clubStats.draws + clubStats.losses;
+            document.getElementById('statMatches').innerText = totalMatches;
+            document.getElementById('statWins').innerText = clubStats.wins;
+            document.getElementById('statDraws').innerText = clubStats.draws;
+            document.getElementById('statLosses').innerText = clubStats.losses;
+            document.getElementById('statGoalsFor').innerText = clubStats.goalsFor;
+            document.getElementById('statGoalsAgainst').innerText = clubStats.goalsAgainst;
+
+            updateCharts();
+        }
+
+        function openClubStatsModal() {
+            document.getElementById('inputWins').value = clubStats.wins;
+            document.getElementById('inputDraws').value = clubStats.draws;
+            document.getElementById('inputLosses').value = clubStats.losses;
+            document.getElementById('inputGoalsFor').value = clubStats.goalsFor;
+            document.getElementById('inputGoalsAgainst').value = clubStats.goalsAgainst;
+            document.getElementById('clubStatsModal').style.display = 'flex';
+        }
+
+        function closeClubStatsModal() {
+            document.getElementById('clubStatsModal').style.display = 'none';
+        }
+
+        function saveClubStats(e) {
+            e.preventDefault();
+            clubStats.wins = parseInt(document.getElementById('inputWins').value) || 0;
+            clubStats.draws = parseInt(document.getElementById('inputDraws').value) || 0;
+            clubStats.losses = parseInt(document.getElementById('inputLosses').value) || 0;
+            clubStats.goalsFor = parseInt(document.getElementById('inputGoalsFor').value) || 0;
+            clubStats.goalsAgainst = parseInt(document.getElementById('inputGoalsAgainst').value) || 0;
+
+            saveAllToStorage();
+            updateClubStatsUI();
+            closeClubStatsModal();
+        }
+
+        // RENDER ESPAÇO DO DONO
+        function updateOwnerUI() {
+            document.getElementById('ownerDisplayTitle').innerHTML = `${ownerInfo.title} <i class="fas fa-check-circle" style="color:var(--primary); font-size: 1.2rem;"></i>`;
+            document.getElementById('ownerDisplayQuote').innerText = `"${ownerInfo.quote}"`;
+        }
+
+        function openOwnerModal() {
+            document.getElementById('inputOwnerTitle').value = ownerInfo.title;
+            document.getElementById('inputOwnerQuote').value = ownerInfo.quote;
+            document.getElementById('ownerModal').style.display = 'flex';
+        }
+
+        function closeOwnerModal() {
+            document.getElementById('ownerModal').style.display = 'none';
+        }
+
+        function saveOwnerInfo(e) {
+            e.preventDefault();
+            ownerInfo.title = document.getElementById('inputOwnerTitle').value;
+            ownerInfo.quote = document.getElementById('inputOwnerQuote').value;
+            
+            const newPass = document.getElementById('inputNewPass').value;
+            if (newPass.trim() !== '') {
+                adminPassword = newPass.trim();
+                localStorage.setItem('galudos_admin_pass', adminPassword);
+                alert('Senha de acesso atualizada com sucesso!');
+            }
+
+            saveAllToStorage();
+            updateOwnerUI();
+            closeOwnerModal();
+        }
+
+        // RENDER MVP
+        function updateMvpUI() {
+            document.getElementById('mvpName').innerText = mvpData.name;
+            document.getElementById('mvpDesc').innerText = mvpData.desc;
+            document.getElementById('mvpGoals').innerText = mvpData.goals;
+            document.getElementById('mvpAssists').innerText = mvpData.assists;
+            document.getElementById('mvpRating').innerText = mvpData.rating;
+        }
+
+        function openMvpModal() {
+            const select = document.getElementById('mvpSelectPlayer');
+            select.innerHTML = squad.map(p => `<option value="${p.id}">${p.name} (${p.pos})</option>`).join('');
+            
+            document.getElementById('inputMvpDesc').value = mvpData.desc;
+            document.getElementById('inputMvpGoals').value = mvpData.goals;
+            document.getElementById('inputMvpAssists').value = mvpData.assists;
+            document.getElementById('inputMvpRating').value = mvpData.rating;
+            
+            document.getElementById('mvpModal').style.display = 'flex';
+        }
+
+        function autoFillMvpData() {
+            const selectedId = parseInt(document.getElementById('mvpSelectPlayer').value);
+            const p = squad.find(item => item.id === selectedId);
+            if(p) {
+                document.getElementById('inputMvpGoals').value = p.goals;
+                document.getElementById('inputMvpAssists').value = p.assists;
+                document.getElementById('inputMvpRating').value = p.avgRating;
+            }
+        }
+
+        function closeMvpModal() {
+            document.getElementById('mvpModal').style.display = 'none';
+        }
+
+        function saveMvp(e) {
+            e.preventDefault();
+            const selectedId = parseInt(document.getElementById('mvpSelectPlayer').value);
+            const p = squad.find(item => item.id === selectedId);
+
+            mvpData.name = p ? p.name : "Jogador";
+            mvpData.desc = document.getElementById('inputMvpDesc').value;
+            mvpData.goals = parseInt(document.getElementById('inputMvpGoals').value);
+            mvpData.assists = parseInt(document.getElementById('inputMvpAssists').value);
+            mvpData.rating = parseFloat(document.getElementById('inputMvpRating').value);
+
+            saveAllToStorage();
+            updateMvpUI();
+            closeMvpModal();
+        }
+
+        // SALA DE TROFÉUS
+        function renderTrophies() {
+            const container = document.getElementById('trophyGrid');
+            container.innerHTML = trophies.map(t => `
+                <div class="trophy-card" onclick="openTrophyDetails('${t.title}', '${t.sub}', '${t.desc}', '${t.icon}')">
+                    <div class="trophy-actions">
+                        <button class="btn-card-edit" onclick="event.stopPropagation(); editTrophy(${t.id})" title="Editar Troféu"><i class="fas fa-pen"></i></button>
+                        <button class="btn-card-edit" onclick="event.stopPropagation(); deleteTrophy(${t.id})" title="Remover Troféu" style="color:#ff4d4d;"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <i class="fas ${t.icon || 'fa-trophy'} trophy-icon"></i>
+                    <div class="trophy-title">${t.title}</div>
+                    <div style="color:var(--text-muted); font-size:0.85rem;">${t.sub}</div>
+                    <div class="trophy-count">Conquistado</div>
+                </div>
+            `).join('');
+        }
+
+        function openTrophyModalForAdd() {
+            document.getElementById('trophyEditTitle').innerText = "Adicionar Troféu";
+            document.getElementById('trophyId').value = '';
+            document.getElementById('tTitle').value = '';
+            document.getElementById('tSub').value = '';
+            document.getElementById('tDesc').value = '';
+            document.getElementById('trophyEditModal').style.display = 'flex';
+        }
+
+        function closeTrophyEditModal() {
+            document.getElementById('trophyEditModal').style.display = 'none';
+        }
+
+        function editTrophy(id) {
+            const t = trophies.find(item => item.id === id);
+            if (!t) return;
+
+            document.getElementById('trophyEditTitle').innerText = "Editar Troféu";
+            document.getElementById('trophyId').value = t.id;
+            document.getElementById('tTitle').value = t.title;
+            document.getElementById('tSub').value = t.sub;
+            document.getElementById('tDesc').value = t.desc;
+            document.getElementById('tIcon').value = t.icon || 'fa-trophy';
+            document.getElementById('trophyEditModal').style.display = 'flex';
+        }
+
+        function deleteTrophy(id) {
+            if (confirm("Deseja apagar este troféu da sala de conquistas?")) {
+                trophies = trophies.filter(t => t.id !== id);
+                saveAllToStorage();
+                renderTrophies();
+            }
+        }
+
+        function saveTrophy(e) {
+            e.preventDefault();
+            const id = document.getElementById('trophyId').value;
+            const trophyData = {
+                id: id ? parseInt(id) : Date.now(),
+                title: document.getElementById('tTitle').value,
+                sub: document.getElementById('tSub').value,
+                desc: document.getElementById('tDesc').value,
+                icon: document.getElementById('tIcon').value
+            };
+
+            if (id) {
+                const idx = trophies.findIndex(t => t.id === parseInt(id));
+                trophies[idx] = trophyData;
+            } else {
+                trophies.push(trophyData);
+            }
+
+            saveAllToStorage();
+            renderTrophies();
+            closeTrophyEditModal();
+        }
+
+        // ELENCO
+        function renderSquad(players) {
+            const container = document.getElementById('squadGrid');
+            container.innerHTML = players.map(p => `
+                <div class="fut-card" onclick="openPlayerProfile(${p.id})">
+                    <div class="card-actions">
+                        <button class="btn-card-edit" onclick="event.stopPropagation(); editPlayer(${p.id})" title="Editar Jogador"><i class="fas fa-pen"></i></button>
+                        <button class="btn-card-edit" onclick="event.stopPropagation(); deletePlayer(${p.id})" title="Remover Jogador" style="color:#ff4d4d;"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="card-top">
+                        <div class="card-rating">${p.rating}</div>
+                        <div class="card-pos">${p.pos}</div>
+                    </div>
+                    <div class="card-avatar">
+                        ${p.photo ? `<img src="${p.photo}" alt="${p.name}">` : `<i class="fas ${p.pos === 'GOL' ? 'fa-user-shield' : 'fa-user'}"></i>`}
+                    </div>
+                    <div class="card-name">${p.name}</div>
+                    <div class="card-gt">${p.gt}</div>
+                    
+                    <div class="card-stats-quick">
+                        <div class="card-stats-quick-item"><div class="val">${p.matches || 0}</div><div class="lbl">JOGOS</div></div>
+                        <div class="card-stats-quick-item"><div class="val">${p.goals || 0}</div><div class="lbl">GOLS</div></div>
+                        <div class="card-stats-quick-item"><div class="val">${p.assists || 0}</div><div class="lbl">ASSIST</div></div>
+                    </div>
+
+                    <div class="card-stats">
+                        <div><div class="card-stat-val">${p.pac}</div><div class="card-stat-lbl">PAC</div></div>
+                        <div><div class="card-stat-val">${p.sho}</div><div class="card-stat-lbl">SHO</div></div>
+                        <div><div class="card-stat-val">${p.pas}</div><div class="card-stat-lbl">PAS</div></div>
+                        <div><div class="card-stat-val">${p.dri}</div><div class="card-stat-lbl">DRI</div></div>
+                        <div><div class="card-stat-val">${p.def}</div><div class="card-stat-lbl">DEF</div></div>
+                        <div><div class="card-stat-val">${p.phy}</div><div class="card-stat-lbl">PHY</div></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterSquad(pos) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            if(event) event.target.classList.add('active');
+
+            if (pos === 'all') {
+                renderSquad(squad);
+            } else {
+                renderSquad(squad.filter(p => p.pos === pos));
+            }
+        }
+
+        // MODAL JOGADOR
+        function openPlayerModal(isEdit = false) {
+            document.getElementById('modalPlayerTitle').innerText = isEdit ? "Editar Jogador & Estatísticas" : "Cadastrar Jogador";
+            document.getElementById('playerModal').style.display = 'flex';
+        }
+
+        function closePlayerModal() {
+            document.getElementById('playerModal').style.display = 'none';
+            document.getElementById('playerForm').reset();
+            document.getElementById('playerId').value = '';
+        }
+
+        function editPlayer(id) {
+            const p = squad.find(item => item.id === id);
+            if (!p) return;
+
+            document.getElementById('playerId').value = p.id;
+            document.getElementById('pName').value = p.name;
+            document.getElementById('pGt').value = p.gt;
+            document.getElementById('pPos').value = p.pos;
+            document.getElementById('pRating').value = p.rating;
+            document.getElementById('pPhoto').value = p.photo || '';
+
+            document.getElementById('pMatches').value = p.matches || 0;
+            document.getElementById('pGoals').value = p.goals || 0;
+            document.getElementById('pAssists').value = p.assists || 0;
+            document.getElementById('pAvgRating').value = p.avgRating || 7.0;
+            document.getElementById('pMotm').value = p.motm || 0;
+
+            document.getElementById('pPac').value = p.pac;
+            document.getElementById('pSho').value = p.sho;
+            document.getElementById('pPas').value = p.pas;
+            document.getElementById('pDri').value = p.dri;
+            document.getElementById('pDef').value = p.def;
+            document.getElementById('pPhy').value = p.phy;
+
+            openPlayerModal(true);
+        }
+
+        function deletePlayer(id) {
+            if (confirm("Deseja realmente remover este jogador do elenco?")) {
+                squad = squad.filter(p => p.id !== id);
+                saveAllToStorage();
+                renderSquad(squad);
+            }
+        }
+
+        function savePlayer(e) {
+            e.preventDefault();
+            const id = document.getElementById('playerId').value;
+            const newPlayerData = {
+                id: id ? parseInt(id) : Date.now(),
+                name: document.getElementById('pName').value,
+                gt: document.getElementById('pGt').value,
+                pos: document.getElementById('pPos').value,
+                rating: parseInt(document.getElementById('pRating').value),
+                photo: document.getElementById('pPhoto').value,
+                
+                matches: parseInt(document.getElementById('pMatches').value) || 0,
+                goals: parseInt(document.getElementById('pGoals').value) || 0,
+                assists: parseInt(document.getElementById('pAssists').value) || 0,
+                avgRating: parseFloat(document.getElementById('pAvgRating').value) || 7.0,
+                motm: parseInt(document.getElementById('pMotm').value) || 0,
+
+                pac: parseInt(document.getElementById('pPac').value),
+                sho: parseInt(document.getElementById('pSho').value),
+                pas: parseInt(document.getElementById('pPas').value),
+                dri: parseInt(document.getElementById('pDri').value),
+                def: parseInt(document.getElementById('pDef').value),
+                phy: parseInt(document.getElementById('pPhy').value)
+            };
+
+            if (id) {
+                const index = squad.findIndex(p => p.id === parseInt(id));
+                squad[index] = newPlayerData;
+            } else {
+                squad.push(newPlayerData);
+            }
+
+            saveAllToStorage();
+            renderSquad(squad);
+            closePlayerModal();
+        }
+
+        // MODAL PERFIL DO JOGADOR
+        function openPlayerProfile(id) {
+            const p = squad.find(item => item.id === id);
+            if(!p) return;
+
+            document.getElementById('playerProfileContent').innerHTML = `
+                <div style="font-size:3rem; color:var(--primary); font-weight:900;">${p.rating} <span style="font-size:1.2rem; color:var(--secondary);">${p.pos}</span></div>
+                <h2 style="font-size:2rem; margin-bottom:0.2rem;">${p.name}</h2>
+                <p style="color:var(--text-muted); margin-bottom:1.5rem;">${p.gt}</p>
+                
+                <div style="background:rgba(0,0,0,0.3); padding:1rem; border-radius:12px; margin-bottom:1.5rem; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; text-align:center;">
+                    <div><div style="font-size:1.3rem; font-weight:800; color:var(--primary);">${p.matches || 0}</div><div style="font-size:0.7rem; color:var(--text-muted);">PARTIDAS</div></div>
+                    <div><div style="font-size:1.3rem; font-weight:800; color:var(--primary);">${p.goals || 0}</div><div style="font-size:0.7rem; color:var(--text-muted);">GOLS</div></div>
+                    <div><div style="font-size:1.3rem; font-weight:800; color:var(--primary);">${p.assists || 0}</div><div style="font-size:0.7rem; color:var(--text-muted);">ASSISTÊNCIAS</div></div>
+                    <div><div style="font-size:1.3rem; font-weight:800; color:var(--gold);">${p.avgRating || '7.0'}</div><div style="font-size:0.7rem; color:var(--text-muted);">NOTA MÉDIA</div></div>
+                    <div><div style="font-size:1.3rem; font-weight:800; color:var(--gold);">${p.motm || 0}</div><div style="font-size:0.7rem; color:var(--text-muted);">HOMEM DO JOGO</div></div>
+                    <div><div style="font-size:1.3rem; font-weight:800; color:var(--secondary);">${((p.goals + p.assists)/(p.matches || 1)).toFixed(2)}</div><div style="font-size:0.7rem; color:var(--text-muted);">PART./JOGO</div></div>
+                </div>
+
+                <h4 style="margin-bottom:0.8rem; color:var(--text-muted); font-size:0.85rem; text-transform:uppercase;">Atributos FUT</h4>
+                <div class="card-stats" style="font-size:0.9rem; padding:12px;">
+                    <div><div class="card-stat-val">${p.pac}</div><div class="card-stat-lbl">PAC</div></div>
+                    <div><div class="card-stat-val">${p.sho}</div><div class="card-stat-lbl">SHO</div></div>
+                    <div><div class="card-stat-val">${p.pas}</div><div class="card-stat-lbl">PAS</div></div>
+                    <div><div class="card-stat-val">${p.dri}</div><div class="card-stat-lbl">DRI</div></div>
+                    <div><div class="card-stat-val">${p.def}</div><div class="card-stat-lbl">DEF</div></div>
+                    <div><div class="card-stat-val">${p.phy}</div><div class="card-stat-lbl">PHY</div></div>
+                </div>
+            `;
+            document.getElementById('playerProfileModal').style.display = 'flex';
+        }
+
+        function closePlayerProfileModal() {
+            document.getElementById('playerProfileModal').style.display = 'none';
+        }
+
+        // MODAL TROFÉUS
+        function openTrophyDetails(name, sub, desc, icon) {
+            document.getElementById('trophyModalName').innerText = name;
+            document.getElementById('trophyModalSub').innerText = sub;
+            document.getElementById('trophyModalDesc').innerText = desc;
+            document.getElementById('trophyModalIcon').className = `fas ${icon || 'fa-trophy'}`;
+            document.getElementById('trophyModal').style.display = 'flex';
+        }
+
+        function closeTrophyModal() {
+            document.getElementById('trophyModal').style.display = 'none';
+        }
+
+        // GRÁFICOS DINÂMICOS
+        function updateCharts() {
+            const ctx1 = document.getElementById('chartAproveitamento').getContext('2d');
+            if (chart1) chart1.destroy();
+            chart1 = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Vitórias', 'Empates', 'Derrotas'],
+                    datasets: [{
+                        data: [clubStats.wins, clubStats.draws, clubStats.losses],
+                        backgroundColor: ['#00FF87', '#60EFFF', '#FF0055'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#9CA3AF' } } }
+                }
+            });
+
+            const ctx2 = document.getElementById('chartGols').getContext('2d');
+            if (chart2) chart2.destroy();
+            chart2 = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Gols Pró (Ataque)', 'Gols Sofridos (Defesa)'],
+                    datasets: [
+                        {
+                            label: 'Total de Gols',
+                            data: [clubStats.goalsFor, clubStats.goalsAgainst],
+                            backgroundColor: ['#00FF87', '#FF0055']
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { ticks: { color: '#9CA3AF' } },
+                        y: { ticks: { color: '#9CA3AF' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // INICIALIZAÇÃO
+        updateOwnerUI();
+        updateMvpUI();
+        updateClubStatsUI();
+        renderTrophies();
+        renderSquad(squad);
+    </script>
+</body>
+</html>
